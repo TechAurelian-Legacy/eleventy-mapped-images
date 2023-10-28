@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { getImageUrl, getImageData } = require('./src/utils.js');
+const { getImageUrl, getImageData } = require('./utils.js');
 
 /**
  * Adds the mimage shortcode to Eleventy.
@@ -23,25 +23,29 @@ function addMimageShortcode(eleventyConfig, options) {
    */
   const mimage = function(args) {
     // Compute the class attribute for the image tag
-    const cClass = args.class ? `class=${args.class}` : '';
+    const cClass = args.class ? `class="${args.class}"` : '';
 
-    // Get the image url by replacing the local:// or external:// prefix with the correct images directory path
+    // Get the image url by replacing the prefix with the correct images directory path
     if (!args.src) throw new Error('mimage requires a src prop for the image src attribute.');
-    const cSrc = getImageUrl(args.src, options.localImagesUrl, options.externalImagesUrl);
+    const cSrc = getImageUrl(args.src, options.imageMaps);
 
     // Get the image width and height from props or from the corresponding image map
-    const { width: mWidth, height: mHeight } = getImageData(args.src, options.localImageMap, options.externalImageMap);
+    const { width: mWidth, height: mHeight } = getImageData(args.src, options.imageMaps);
     const cWidth = args.width ?? mWidth;
     const cHeight = args.height ?? mHeight;
 
     // Get the image alt and title from args
     const cAlt = args.alt;
     if (!cAlt) throw new Error(`mimage requires an alt prop for the image alt text.\nsrc: ${args.src}`);
-    const cTitle = args.title;
+    const cTitle = args.title ? `title="${args.title}"` : '';
 
-    return `<img ${cClass} src=${cSrc} width=${cWidth} height=${cHeight} alt=${cAlt} title=${cTitle} />`;
+    return `<img ${cClass} src="${cSrc}" width="${cWidth}" height="${cHeight}" alt="${cAlt}" ${cTitle} />`;
   };
 
   // Add the shortcode to Eleventy
   eleventyConfig.addShortcode("mimage", mimage);
 }
+
+module.exports = {
+  addMimageShortcode,
+};

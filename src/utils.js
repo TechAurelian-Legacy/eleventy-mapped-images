@@ -6,28 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const LOCAL_PREFIX = 'local://';
-const EXTERNAL_PREFIX = 'external://';
-
 /**
- * Determines whether the provided image is a local image or an external image, based on the prefix.
- *
- * @param {string} src The image path with a local:// or external:// prefix.
- * @returns {boolean} Whether the image is a local image or an external image.
+ * Returns the prefix for the provided image path.
+ * 
+ * @param {string} src The image path with a prefix.
+ * @returns {string} The image prefix.
  */
-function isLocalImage(src) {
-  let isLocal = false;
-  if (src.startsWith(LOCAL_PREFIX)) {
-    isLocal = true;
-  } else if (src.startsWith(EXTERNAL_PREFIX)) {
-    isLocal = false;
-  } else {
-    throw new Error(
-      `mimage requires a src prop that starts with either ${LOCAL_PREFIX} or ${EXTERNAL_PREFIX}.\nsrc: ${src}`
-    );
-  }
-
-  return isLocal;
+function getImagePrefix(src) {
+  return src.split('://')[0];
 }
 
 /**
@@ -35,19 +21,18 @@ function isLocalImage(src) {
  *
  * Currently the image width and height are returned.
  *
- * @param {string} src The image path with a local:// or external:// prefix.
- * @param {Map<string, object>} localImageMap The local image map.
- * @param {Map<string, object>} externalImageMap The external image map.
+ * @param {string} src The image path with a prefix.
+ * @param {object} imageMaps The image maps.
  * @returns {object} The image data.
  */
-function getImageData(src, localImageMap, externalImageMap) {
-  const isLocal = isLocalImage(src);
+function getImageData(src, imageMaps) {
+
+  // Get the correct image map based on the prefix
+  const prefix = getImagePrefix(src);
+  const map = imageMaps[prefix].map;
 
   // Remove the prefix from the src to get the key for the image map
-  let cSrc = src.replace(isLocal ? LOCAL_PREFIX : EXTERNAL_PREFIX, '');
-
-  // Get the correct image map based on the image type
-  const map = isLocal ? localImageMap : externalImageMap;
+  const cSrc = src.replace(`${prefix}://`, '');
 
   // Get the image data from the map
   let width, height;
@@ -61,20 +46,15 @@ function getImageData(src, localImageMap, externalImageMap) {
 }
 
 /**
- * Returns the image URL by replacing the local:// or external:// prefix with the appropriate images directory urls.
+ * Returns the image URL by replacing the prefix with the appropriate images directory urls.
  *
- * @param {string} src The image path with a local:// or external:// prefix.
- * @param {string} localImagesUrl The local images directory url.
- * @param {string} externalImagesUrl The external images directory url.
+ * @param {string} src The image path with a prefix.
+ * @param {object} imageMaps The image maps.
  * @returns {string} The absolute image URL.
  */
-function getImageUrl(src, localImagesUrl, externalImagesUrl) {
-  const isLocal = isLocalImage(src);
-
-  return src.replace(
-    isLocal ? LOCAL_PREFIX : EXTERNAL_PREFIX,
-    isLocal ? localImagesUrl : externalImagesUrl
-  );
+function getImageUrl(src, imageMaps) {
+  const prefix = getImagePrefix(src);
+  return src.replace(`${prefix}://`, imageMaps[prefix].url);
 }
 
 module.exports = {
