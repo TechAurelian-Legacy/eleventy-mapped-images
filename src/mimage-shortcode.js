@@ -9,6 +9,16 @@
 const { getImageUrl, getImageData } = require('./utils.js');
 
 /**
+ * Constructs an attribute string with the provided key and value (e.g. class="my-class")
+ * @param {string} key The attribute key.
+ * @param {string} value The attribute value.
+ * @returns {string} The attribute string or an empty string if the value is undefined.
+ */
+function getAttr(key, value) {
+  return value ? `${key}="${value}"` : '';
+}
+
+/**
  * Adds the mimage shortcode to Eleventy.
  * @param {object} eleventyConfig The Eleventy configuration object.
  * @param {object} options The options for the shortcode.
@@ -22,9 +32,6 @@ function addMimageShortcode(eleventyConfig, options) {
    * @returns {string} The HTML image tag.
    */
   const mimage = function(args) {
-    // Compute the class attribute for the image tag
-    const cClass = args.class ? `class="${args.class}"` : '';
-
     // Get the image url by replacing the prefix with the correct images directory path
     if (!args.src) throw new Error('mimage requires a src prop for the image src attribute.');
     const cSrc = getImageUrl(args.src, options.imageMaps);
@@ -34,12 +41,10 @@ function addMimageShortcode(eleventyConfig, options) {
     const cWidth = args.width ?? mWidth;
     const cHeight = args.height ?? mHeight;
 
-    // Get the image alt and title from args
-    const cAlt = args.alt;
-    if (!cAlt) throw new Error(`mimage requires an alt prop for the image alt text.\nsrc: ${args.src}`);
-    const cTitle = args.title ? `title="${args.title}"` : '';
+    // The alt text is required
+    if (!args.alt) throw new Error(`mimage requires an alt prop for the image alt text.\nsrc: ${args.src}`);
 
-    return `<img ${cClass} src="${cSrc}" width="${cWidth}" height="${cHeight}" alt="${cAlt}" ${cTitle} />`;
+    return `<img ${getAttr('class', args.class)} ${getAttr('src', cSrc)} ${getAttr('width', cWidth)} ${getAttr('height', cHeight)} ${getAttr('alt', args.alt)} ${getAttr('title', args.title)} />`;
   };
 
   // Add the shortcode to Eleventy
