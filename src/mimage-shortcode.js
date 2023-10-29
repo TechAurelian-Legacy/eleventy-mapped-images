@@ -42,9 +42,11 @@ function addMimageShortcode(eleventyConfig, options) {
     const cHeight = args.height ?? mHeight;
 
     // The alt text is required
-    if (!args.alt) throw new Error(`mimage requires an alt prop for the image alt text.\nsrc: ${args.src}`);
+    if (args.alt == null || args.alt == undefined) { 
+      throw new Error(`mimage requires an alt prop for the image alt text.\nsrc: ${args.src}`);
+    }
 
-    return `<img ${getAttr('class', args.class)} ${getAttr('src', cSrc)} ${getAttr('width', cWidth)} ${getAttr('height', cHeight)} ${getAttr('alt', args.alt)} ${getAttr('title', args.title)} />`;
+    return `<img ${getAttr('class', args.class)} ${getAttr('src', cSrc)} ${getAttr('width', cWidth)} ${getAttr('height', cHeight)} alt="${args.alt}" ${getAttr('title', args.title)} />`;
   };
 
   // Add the shortcode to Eleventy
