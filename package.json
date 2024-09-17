@@ -1,7 +1,8 @@
 {
   "name": "eleventy-mapped-images",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An Eleventy plugin that handles both local and external images and includes the correct width and height attributes using pre-generated image maps.",
+  "type": "module",
   "main": ".eleventy.js",
   "author": {
     "name": "TechAurelian",

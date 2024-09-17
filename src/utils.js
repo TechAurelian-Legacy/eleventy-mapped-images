@@ -25,7 +25,7 @@ function getImagePrefix(src) {
  * @param {object} imageMaps The image maps.
  * @returns {object} The image data.
  */
-function getImageData(src, imageMaps) {
+export function getImageData(src, imageMaps) {
 
   // Get the correct image map based on the prefix
   const prefix = getImagePrefix(src);
@@ -52,12 +52,7 @@ function getImageData(src, imageMaps) {
  * @param {object} imageMaps The image maps.
  * @returns {string} The absolute image URL.
  */
-function getImageUrl(src, imageMaps) {
+export function getImageUrl(src, imageMaps) {
   const prefix = getImagePrefix(src);
   return src.replace(`${prefix}://`, imageMaps[prefix].url);
 }
-
-module.exports = {
-  getImageData,
-  getImageUrl,
-};

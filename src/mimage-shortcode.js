@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { getImageUrl, getImageData } = require('./utils.js');
+import { getImageUrl, getImageData } from './utils.js';
 
 /**
  * Constructs an attribute string with the provided key and value (e.g. class="my-class")
@@ -23,7 +23,7 @@ function getAttr(key, value) {
  * @param {object} eleventyConfig The Eleventy configuration object.
  * @param {object} options The options for the shortcode.
  */
-function addMimageShortcode(eleventyConfig, options) {
+export function addMimageShortcode(eleventyConfig, options) {
 
   /**
    * Returns the content for the mimage shortcode, which is a HTML image tag with attributes
@@ -52,7 +52,3 @@ function addMimageShortcode(eleventyConfig, options) {
   // Add the shortcode to Eleventy
   eleventyConfig.addShortcode("mimage", mimage);
 }
-
-module.exports = {
-  addMimageShortcode,
-};

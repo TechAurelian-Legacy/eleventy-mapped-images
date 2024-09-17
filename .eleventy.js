@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { addMimageShortcode } = require('./src/mimage-shortcode.js');
+import { addMimageShortcode } from './src/mimage-shortcode.js';
+import { addMimageUrlFilter } from './src/mimage-url-filter.js';
 
 /**
  * Validates the provided option by throwing an error if it is not defined.
@@ -24,4 +25,7 @@ module.exports = function (eleventyConfig, options = {}) {
 
   // Add the mimage shortcode
   addMimageShortcode(eleventyConfig, options);
+
+  // Add the mimageUrl filter
+  addMimageUrlFilter(eleventyConfig, options);
 };
