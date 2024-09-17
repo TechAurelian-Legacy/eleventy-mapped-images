@@ -19,7 +19,7 @@ function validateOption(options, name) {
   if (!options[name]) throw new Error(`eleventy-mapped-images requires a ${name} option.`);
 }
 
-module.exports = function (eleventyConfig, options = {}) {
+export default function (eleventyConfig, options = {}) {
   // Validate options
   validateOption(options, 'imageMaps');
 
